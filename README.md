@@ -1,3 +1,54 @@
+# 🛒 CRUD Compras - API REST
+
+API REST completa para gerenciamento de compras com relacionamento entre Usuários, Produtos e Pedidos.
+
+---
+
+## 🎯 Sobre
+
+Sistema de gerenciamento de compras com funcionalidades completas de CRUD (Create, Read, Update, Delete) para:
+
+- **Usuários**: Gerenciamento de clientes do sistema
+- **Produtos**: Catálogo de produtos com controle de estoque
+- **Pedidos**: Sistema de pedidos com relacionamento entre usuários e produtos
+
+### Funcionalidades principais:
+
+- ✅ Controle automático de estoque
+- ✅ Transações para garantir consistência dos dados
+- ✅ Relacionamento em cascata (deletar usuário deleta seus pedidos)
+- ✅ Validações completas em todas as operações
+- ✅ Respostas padronizadas em JSON
+
+---
+
+## 🔧 Tecnologias Utilizadas
+
+- **Node.js** - Runtime JavaScript
+- **Express** - Framework web
+- **PostgreSQL** - Banco de dados relacional
+- **pg** - Driver PostgreSQL para Node.js
+- **dotenv** - Gerenciamento de variáveis de ambiente
+
+---
+
+## 📦 Instalação
+
+### Pré-requisitos
+
+- Node.js (versão 14 ou superior)
+- PostgreSQL (versão 12 ou superior)
+- npm ou yarn
+
+
+## 🚀 Uso
+```bash
+npm install
+npm start
+```
+
+---
+
 ## 📚 Documentação da API
 
 ### Base URL
@@ -406,71 +457,32 @@ PUT http://localhost:3000/api/pedidos/1
 - **pedidos**: id, usuario_id, status, total, criado_em, atualizado_em
 - **pedido_itens**: id, pedido_id, produto_id, quantidade, preco_unitario
 
+### Relacionamentos:
+
+- Um usuário pode ter vários pedidos (1:N)
+- Um pedido pertence a um usuário (N:1)
+- Um pedido pode ter vários produtos através de pedido_itens (N:N)
+- Produtos mantêm histórico de preço nos pedidos (preço no momento da compra)
+
 ---
 
 ## ⚠️ Validações
 
 ### Usuários:
 - Nome: mínimo 3 caracteres
-- Email: formato válido
+- Email: formato válido e único no sistema
 - Senha: mínimo 6 caracteres
-- Email único no sistema
+- Telefone: opcional
 
 ### Produtos:
 - Nome: mínimo 3 caracteres
 - Preço: maior que 0
 - Estoque: maior ou igual a 0
+- Categoria: opcional
 
 ### Pedidos:
 - Usuario ID: obrigatório e deve existir
 - Produtos: array com pelo menos 1 item
 - Cada produto: deve ter produtoId, quantidade e preco
 - Status: deve ser um dos valores válidos
-
----
-
-## 🔧 Tecnologias Utilizadas
-
-- **Node.js** - Runtime JavaScript
-- **Express** - Framework web
-- **PostgreSQL** - Banco de dados relacional
-- **pg** - Driver PostgreSQL para Node.js
-- **dotenv** - Gerenciamento de variáveis de ambiente
-
----
-
-## 📝 Observações Importantes
-
-1. **Transações**: Os pedidos usam transações para garantir consistência dos dados
-2. **Estoque**: O estoque é atualizado automaticamente ao criar/atualizar/deletar pedidos
-3. **Cascade**: Ao deletar um usuário, todos os seus pedidos são deletados automaticamente
-4. **Senha**: Em produção, use bcrypt para hash de senhas (não implementado neste exemplo)
-
----
-
-## 🐛 Troubleshooting
-
-### Erro de conexão com PostgreSQL
-- Verifique se o PostgreSQL está rodando
-- Confirme as credenciais no arquivo `.env`
-- Teste a conexão: `psql -U postgres -d crud_compras`
-
-### Erro "relation does not exist"
-- Execute o schema.sql novamente
-- Verifique se está conectado ao banco correto
-
-### Porta 3000 já em uso
-- Mude a porta no arquivo `.env`
-- Ou mate o processo: `lsof -ti:3000 | xargs kill -9`
-
----
-
-## 📄 Licença
-
-ISC
-
----
-
-## 👨‍💻 Autor
-
-Desenvolvido como projeto educacional de API REST com CRUD completo.
+- Status válidos: "pendente", "processando", "enviado", "entregue", "cancelado"
